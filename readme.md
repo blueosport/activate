@@ -1,6 +1,6 @@
 # 🌐 BlueByteOS (v3.0.0-Gamma)
 
-[![License: GPL v2.0](https://img.shields.io/badge/GNU-Public-License%20%2F%20TS-green.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+[License: GPL v2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 [![Engine: Vite + TS](https://img.shields.io/badge/Engine-Vite%20%2F%20TS-blue.svg)](https://vite.dev/)
 [![Design: Cyberpunk Midnight](https://img.shields.io/badge/Aesthetic-Midnight%20Cyber-03030f.svg)](#)
 
