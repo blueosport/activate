@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en" class="h-full w-full select-none">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlueByteOS 3.0 (Gamma)</title>
+    <link rel="stylesheet" href="/src/index.css" />
+  </head>
+  <body class="h-full w-full bg-black text-slate-100 font-sans overflow-hidden relative">
+
+    <!-- Retro CRT & Scanline Overlays (Managed by Settings toggles) -->
+    <div id="crt-overlay-container" class="crt-overlay pointer-events-none absolute inset-0 z-[99999]"></div>
+    <div id="cyber-scanline-ref" class="cyber-scanline"></div>
+
+    <!-- BIOS Boot Screen -->
+    <div id="bios-boot-screen" class="absolute inset-0 bg-[#000000] z-[999999] p-6 font-mono text-xs text-blue-500 overflow-hidden flex flex-col justify-between">
+      <div id="boot-log" class="space-y-1">
+        <div>[    0.000000] BIOS: SYNCING SITE WITH BOOT SYSTEM PROMPT...</div>
+        <div>[    0.021034] CPU: BLUEBYTE VIRTUAL INTERFACE v3.0 @ 1.4GHZ</div>
+        <div>[    0.103099] CORE: Initializing Virtual File System (VFS)...</div>
+        <div>[    0.245031] LSTR: localStorage linked successfully. Mount index: 0x2A</div>
+        <div>[    0.692305] UI: Loading desktop assets, widgets & games suite...</div>
+        <div>[    0.854023] SYSTEM: BlueByteOS 3.0 (Gamma) initialized. Booting up...</div>
+      </div>
+      <div class="flex items-center justify-between border-t border-blue-900 Pt-4">
+        <div class="flex items-center gap-2">
+          <span class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+          <span>SYSTEM READY</span>
+        </div>
+        <div>PRESS ANY KEY OR CLICK TO ACCELERATE DESKTOP LAUNCH</div>
+      </div>
+    </div>
+
+    <!-- Windows-Like Lockscreen -->
+    <div id="lock-screen" class="fixed inset-0 z-[88888] bg-black select-none hidden flex flex-col justify-between p-12 font-mono transition-transform duration-700 ease-in-out">
+      <!-- Background Wallpaper / Ambient Cyber Graphic -->
+      <div class="absolute inset-0 cyber-grid pointer-events-none opacity-40"></div>
+      <div class="absolute inset-0 bg-radial-gradient from-blue-950/20 to-black pointer-events-none"></div>
+
+      <!-- Header with lockscreen time/date in huge typography -->
+      <div class="z-10 flex flex-col pt-12 items-start pl-6 md:pl-16">
+        <div id="lock-time" class="text-7xl sm:text-8xl font-sans tracking-tight font-light text-slate-100 mb-1">00:00</div>
+        <div id="lock-date" class="text-lg sm:text-xl font-normal text-blue-400 tracking-wider">Saturday, May 30</div>
+      </div>
+
+      <!-- Lockscreen Click area to transition to Login screen -->
+      <div id="lock-dismiss-prompt" class="z-10 flex flex-col items-center justify-center animate-bounce text-xs tracking-wider text-blue-500 font-bold opacity-80 cursor-pointer">
+        <svg class="h-6 w-6 mb-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="18 15 12 9 6 15"/>
+        </svg>
+        <span>CLICK OR PRESS ANY KEY TO SIGN IN</span>
+      </div>
+
+      <!-- Login Screen Overlay -->
+      <div id="login-container" class="absolute inset-0 bg-black/95 z-20 flex flex-col items-center justify-center hidden p-8">
+        <!-- Profile Bubble or Initial Icon -->
+        <div class="h-20 w-20 rounded-full bg-blue-950/60 border border-blue-500/40 flex items-center justify-center mb-4 shadow-[0_0_15px_rgba(59,130,246,0.25)] relative overflow-hidden group">
+          <svg class="h-10 w-10 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+
+        <!-- User Signature Title -->
+        <div id="login-welcome-title" class="text-sm font-bold tracking-wider text-blue-400 mb-6 font-mono">ADMINISTRATOR</div>
+
+        <!-- Dynamic Form Fields inside Lockscreen -->
+        <div class="w-full max-w-xs space-y-4 font-mono">
+          <!-- Setup Password Container -->
+          <div id="setup-password-wrap" class="hidden space-y-3">
+            <p class="text-[10px] text-blue-500 text-center uppercase tracking-widest font-semibold">First-Time Setup: Create a Lock Code</p>
+            <input type="password" id="lock-new-password" placeholder="NEW PASSWORD" class="w-full bg-[#050510] border border-blue-900/50 text-xs px-3 py-2 rounded focus:outline-none focus:border-blue-400 font-mono text-center tracking-widest text-[#00ffcc]" autocomplete="off" />
+            <input type="password" id="lock-confirm-password" placeholder="CONFIRM PASSWORD" class="w-full bg-[#050510] border border-blue-900/50 text-xs px-3 py-2 rounded focus:outline-none focus:border-blue-400 font-mono text-center tracking-widest text-[#00ffcc]" autocomplete="off" />
+            <button id="lock-setup-btn" class="w-full py-2 bg-blue-900/30 hover:bg-blue-900/50 text-[11px] text-blue-300 rounded border border-blue-500/30 transition-all font-bold cursor-pointer">CREATE OS ACCOUNT</button>
+          </div>
+
+          <!-- Normal Login Password Container -->
+          <div id="login-password-wrap" class="hidden flex items-center bg-[#050510] border border-blue-900/50 rounded overflow-hidden px-2 py-1 focus-within:border-blue-400 shadow-[inset_0_0_4px_rgba(59,130,246,0.1)]">
+            <input type="password" id="lock-login-password" placeholder="PASSWORD" class="flex-1 bg-transparent border-none text-center tracking-widest text-[#00ffcc] text-xs py-1 px-2 focus:outline-none font-mono text-center" autocomplete="off" />
+            <button id="lock-login-btn" class="h-7 w-7 text-blue-400 hover:text-blue-200 hover:bg-blue-900/20 rounded flex items-center justify-center transition-colors cursor-pointer" title="Sign In">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Error Alert and Hints -->
+          <div id="lock-error" class="text-[10px] text-red-500 font-semibold text-center h-4 opacity-0 transition-opacity"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN DESKTOP CONTEXT -->
+    <div id="desktop-layer" class="h-full w-full flex flex-col relative opacity-0 transition-opacity duration-700 bg-black blue-scanline-wallpaper">
+      
+      <!-- Ambient Back Grid -->
+      <div id="grid-bg" class="absolute inset-0 cyber-grid pointer-events-none z-0"></div>
+
+      <!-- DESKTOP WORKSPACE -->
+      <main id="desktop-workspace" class="flex-1 w-full relative p-4 z-10 overflow-hidden">
+        <!-- Desktop Shortcuts Container -->
+        <div id="desktop-icons" class="grid grid-flow-row grid-cols-[repeat(auto-fill,minmax(85px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(110px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-y-6 sm:gap-y-8 md:gap-y-10 gap-x-2 sm:gap-x-4 justify-items-center content-start select-none">
+          <!-- Populated by JS to keep it dynamic and robust -->
+        </div>
+
+        <!-- WINDOW LAYER FRAMEWORK (Hydrated by JS) -->
+        <div id="window-container" class="absolute inset-0 pointer-events-none z-20">
+          <!-- Dynamic absolute windows spawned here -->
+        </div>
+      </main>
+
+      <!-- SYSTEM TASKBAR -->
+      <footer id="system-taskbar" class="h-12 w-full bg-[#000005]/95 border-t border-blue-900/50 flex items-center justify-between px-3 z-30 select-none glass-panel">
+        <div class="flex items-center gap-2 h-full">
+          <!-- Start Button -->
+          <button id="start-button" class="flex items-center gap-2 px-3 h-9 rounded bg-blue-950/60 border border-blue-500/50 hover:bg-blue-900/80 hover:border-blue-400 active:scale-95 transition-all cursor-pointer shadow-[0_0_8px_rgba(59,130,246,0.2)]">
+            <!-- Icon -->
+            <svg class="h-4 w-4 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <rect x="2" y="2" width="9" height="9" rx="1"/>
+              <rect x="13" y="2" width="9" height="9" rx="1"/>
+              <rect x="2" y="13" width="9" height="9" rx="1"/>
+              <rect x="13" y="13" width="9" height="9" rx="1"/>
+            </svg>
+            <span class="font-mono text-xs font-bold tracking-widest text-blue-400">BLUEBYTE</span>
+          </button>
+
+          <!-- Divider -->
+          <div class="h-6 w-[1px] bg-blue-900/40"></div>
+
+          <!-- Shortcuts -->
+          <div id="taskbar-pinned" class="flex items-center gap-1 h-full">
+            <!-- Pinned shortcuts managed by script -->
+          </div>
+        </div>
+
+        <!-- Taskbar Windows List -->
+        <div id="taskbar-windows" class="flex-1 flex max-w-lg overflow-x-auto gap-1 mx-4 h-full items-center justify-start scrollbar-none">
+          <!-- Dynamic task items representing open processes -->
+        </div>
+
+        <!-- Taskbar Info Tray -->
+        <div class="flex items-center gap-4">
+          <!-- Battery/Audio status indicator -->
+          <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-blue-500 bg-blue-950/25 border border-blue-900/30 px-2 py-1 rounded">
+            <span id="audio-indicator-btn" class="cursor-pointer hover:text-blue-400 flex items-center gap-1">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" id="audio-icon-elem">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              </svg>
+              <span>VOLUME</span>
+            </span>
+          </div>
+
+          <!-- Clock and date -->
+          <div id="taskbar-clock-tray" class="flex flex-col items-end justify-center font-mono text-[10px] text-blue-400 select-none bg-blue-950/25 border border-blue-900/30 px-2 py-0.5 rounded cursor-pointer hover:bg-blue-900/20">
+            <span id="taskbar-time" class="font-bold text-xs">00:00:00 AM</span>
+            <span id="taskbar-date" class="text-blue-500/80">05/30/2026</span>
+          </div>
+        </div>
+      </footer>
+
+      <!-- START MENU OVERLAY PANEL -->
+      <div id="start-menu" class="fixed bottom-14 left-3 w-80 max-w-full bg-[#050510]/95 border border-blue-500/40 rounded-lg shadow-[0_4px_30px_rgba(0,0,0,0.8),0_0_15px_rgba(59,130,246,0.3)] z-50 flex flex-col overflow-hidden hidden glass-panel font-mono">
+        <!-- Start Menu Header -->
+        <div class="p-4 bg-gradient-to-r from-blue-950 to-[#050510] border-b border-blue-900/40 flex items-center gap-3">
+          <div class="h-10 w-10 rounded bg-blue-900/30 border border-blue-400/30 flex items-center justify-center shadow-[inset_0_0_8px_rgba(59,130,246,0.4)]">
+            <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+            </svg>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-blue-400">BLUEBYTE WORKSTATION</div>
+            <div class="text-[10px] text-blue-500">status: online [v3.0.0-gamma]</div>
+          </div>
+        </div>
+
+        <!-- Start Menu Body -->
+        <div class="p-2 border-b border-blue-900/10 flex-1 grid grid-cols-1 gap-1 py-3 text-xs overflow-y-auto max-h-80">
+          <button class="start-menu-item flex items-center gap-3 px-3 py-2 rounded text-blue-300 hover:bg-blue-950/70 hover:text-blue-100 border border-transparent hover:border-blue-500/20 group cursor-pointer transition-all" data-app-id="file-explorer">
+            <svg class="h-4 w-4 text-blue-400 group-hover:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z"/>
+            </svg>
+            <span>File Explorer</span>
+          </button>
+          
+          <button class="start-menu-item flex items-center gap-3 px-3 py-2 rounded text-blue-300 hover:bg-blue-950/70 hover:text-blue-100 border border-transparent hover:border-blue-500/20 group cursor-pointer transition-all" data-app-id="note-pad">
+            <svg class="h-4 w-4 text-blue-400 group-hover:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span>Notes Pad</span>
+          </button>
+
+          <button class="start-menu-item flex items-center gap-3 px-3 py-2 rounded text-blue-300 hover:bg-blue-950/70 hover:text-blue-100 border border-transparent hover:border-blue-500/20 group cursor-pointer transition-all" data-app-id="terminal">
+            <svg class="h-4 w-4 text-blue-400 group-hover:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="4 17 10 11 4 5"/>
+              <line x1="12" y1="19" x2="20" y2="19"/>
+            </svg>
+            <span>Shell Terminal</span>
+          </button>
+
+          <button class="start-menu-item flex items-center gap-3 px-3 py-2 rounded text-blue-300 hover:bg-blue-950/70 hover:text-blue-100 border border-transparent hover:border-blue-500/20 group cursor-pointer transition-all" data-app-id="games-app">
+            <svg class="h-4 w-4 text-blue-400 group-hover:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="6" width="20" height="12" rx="2"/>
+              <line x1="6" y1="12" x2="10" y2="12"/>
+              <line x1="8" y1="10" x2="8" y2="14"/>
+              <line x1="15" y1="13" x2="15.01" y2="13"/>
+              <line x1="18" y1="11" x2="18.01" y2="11"/>
+            </svg>
+            <span>Arcade Games</span>
+          </button>
+
+          <button class="start-menu-item flex items-center gap-3 px-3 py-2 rounded text-blue-300 hover:bg-blue-950/70 hover:text-blue-100 border border-transparent hover:border-blue-500/20 group cursor-pointer transition-all" data-app-id="catbox-uploader">
+            <svg class="h-4 w-4 text-blue-400 group-hover:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+            </svg>
+            <span>Catbox.moe</span>
+          </button>
+
+          <button class="start-menu-item flex items-center gap-3 px-3 py-2 rounded text-blue-300 hover:bg-blue-950/70 hover:text-blue-100 border border-transparent hover:border-blue-500/20 group cursor-pointer transition-all" data-app-id="neon-browser">
+            <svg class="h-4 w-4 text-blue-400 group-hover:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            <span>Neon Void Browser</span>
+          </button>
+
+          <div class="h-[1px] bg-blue-950/40 my-1"></div>
+
+          <button class="start-menu-item flex items-center gap-3 px-3 py-2 rounded text-blue-300 hover:bg-blue-950/70 hover:text-blue-100 border border-transparent hover:border-blue-500/20 group cursor-pointer transition-all" data-app-id="settings-app">
+            <svg class="h-4 w-4 text-blue-400 group-hover:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span>Config Settings</span>
+          </button>
+
+          <button class="start-menu-item flex items-center gap-3 px-3 py-2 rounded text-blue-300 hover:bg-blue-950/70 hover:text-blue-100 border border-transparent hover:border-blue-500/20 group cursor-pointer transition-all" data-app-id="info-app">
+            <svg class="h-4 w-4 text-blue-400 group-hover:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <span>BlueByteOS 3.0 (Gamma)</span>
+          </button>
+
+          <button class="start-menu-item flex items-center gap-3 px-3 py-2 rounded text-blue-300 hover:bg-blue-950/70 hover:text-blue-100 border border-transparent hover:border-blue-500/20 group cursor-pointer transition-all" data-app-id="hints-app">
+            <svg class="h-4 w-4 text-blue-400 group-hover:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+            <span>Hints & Shortcuts</span>
+          </button>
+        </div>
+
+        <!-- Start Menu Footer Footer -->
+        <div class="p-3 bg-blue-950/40 flex items-center justify-between text-[11px] text-blue-400">
+          <div class="flex items-center gap-1.5">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500"></span>
+            <span>SYSTEM STABLE</span>
+          </div>
+          <button id="vfs-reboot-btn" class="px-2.5 py-1 text-[10px] text-red-400 bg-red-950/20 border border-red-500/30 hover:bg-red-950/50 hover:text-red-300 active:scale-95 transition-all cursor-pointer rounded">
+            RESET OS
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- AUDIO SCRIPT ENGINE & DATA STORES -->
+    <script type="module" src="/src/desktop.js"></script>
+  </body>
+</html>

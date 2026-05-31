@@ -1,0 +1,6 @@
+{
+  "name": "BlueByte",
+  "description": "BlueByteOS 3.0 (Gamma) - A polished blue and black desktop lookalike portfolio featuring Catbox upload, a terminal with fastfetch and htop, notes, file explorer with state persistence, sudoku and solitaire games, and the Neon Void browser.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
