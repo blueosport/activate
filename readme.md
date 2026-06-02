@@ -3,6 +3,8 @@
 
 Welcome to **BlueByteOS (Gamma)**, an immersive, 100% responsive, blue-and-black cybernetic desktop workstation dashboard. Built from scratch with advanced styling, custom audio-synthesis sound effects, and clean modular logic. It functions as a complete interactive simulation of an operating system right in your browser.
 
+**The site** is completely *HTML, Vanilla JS and CSS*.
+**The backend** is made with *Vite, Typescript and Json*
 ---
 
 ## Live Demo & Development Portal
@@ -35,7 +37,7 @@ Welcome to **BlueByteOS (Gamma)**, an immersive, 100% responsive, blue-and-black
     *   VFS Navigation (`ls`, `cat`, etc.) — Inspect files directly inside the shell terminal.
 
 ###  4. Catbox Cloud Dispatcher
-*   **Web Upload Engine:** Direct API transmitter integration for temporary payload storage via `catbox.moe`.
+*   **Web Upload Engine:** Direct API transmitter integration for file storage via `catbox.moe` of around 200MB per file max.
 *   **Drag-and-Drop:** Intuitive file transfer with drag-over trigger classes.
 
 ###  5. Retro Arcade Game Suite
