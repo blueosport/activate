@@ -1,8 +1,5 @@
 # 🌐 BlueByteOS (v3.0.0-Gamma)
 
-[Made under License: GPL v2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
-[![Engine: Vite + TS](https://img.shields.io/badge/Engine-Vite%20%2F%20TS-blue.svg)](https://vite.dev/)
-[![Design: Cyberpunk Midnight](https://img.shields.io/badge/Aesthetic-Midnight%20Cyber-03030f.svg)](#)
 
 Welcome to **BlueByteOS (Gamma)**, an immersive, 100% responsive, blue-and-black cybernetic desktop workstation dashboard. Built from scratch with advanced styling, custom audio-synthesis sound effects, and clean modular logic. It functions as a complete interactive simulation of an operating system right in your browser.
 
