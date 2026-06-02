@@ -88,7 +88,7 @@ npm run build
 Production assets compile cleanly directly inside the `/dist` output directory.
 
 ---
-### 5. Github forking with vercel
+### Github forking with Vercel
 ```bash
 https://activate-bluebyte.vercel.app/
 ```
@@ -97,7 +97,7 @@ you can check out the github_deployment file inside the file explorer to get the
 
 Once its done , head on to vercel and import this project and deploy it using the default React vite configuration.
 
-### 6. You are All Set!
+### And You are All Set! :)
 
 ## 📜 License
 This software workspace is distributed entirely under the **GPL 2.0 License**. Check out `/LICENSE` variables for more information.
