@@ -93,6 +93,7 @@ https://activate-bluebyte.vercel.app/
 you can check out the github_deployment file inside the file explorer to get these files hosted on your page
 
 Once its done , head on to vercel and import this project and deploy it using the default React vite configuration.
+The site will load up its servers and configs in Vite bite , the webpage will not taking much of system resources since it will run purely on Vercel servers.
 
 ### And You are All Set! :)
 
