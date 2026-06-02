@@ -1,6 +1,6 @@
 # 🌐 BlueByteOS (v3.0.0-Gamma)
 
-[License: GPL v2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+[Made under License: GPL v2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 [![Engine: Vite + TS](https://img.shields.io/badge/Engine-Vite%20%2F%20TS-blue.svg)](https://vite.dev/)
 [![Design: Cyberpunk Midnight](https://img.shields.io/badge/Aesthetic-Midnight%20Cyber-03030f.svg)](#)
 
@@ -88,7 +88,16 @@ npm run build
 Production assets compile cleanly directly inside the `/dist` output directory.
 
 ---
+### 5. Github forking with vercel
+```bash
+https://activate-bluebyte.vercel.app/
+```
 
+you can check out the github_deployment file inside the file explorer to get these files hosted on your page
+
+Once its done , head on to vercel and import this project and deploy it using the default React vite configuration.
+
+### 6. You are All Set!
 
 ## 📜 License
 This software workspace is distributed entirely under the **GPL 2.0 License**. Check out `/LICENSE` variables for more information.
