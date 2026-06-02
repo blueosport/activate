@@ -97,4 +97,4 @@ Once its done , head on to vercel and import this project and deploy it using th
 ### And You are All Set! :)
 
 ## 📜 License
-This software workspace is distributed entirely under the **GPL 2.0 License**. Check out `/LICENSE` variables for more information.
+This software workspace is distributed entirely under the **GPL 2.0 License**. Check out `LICENSE.md` file for more information.
